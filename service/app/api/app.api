@@ -1,0 +1,16 @@
+syntax = "v1"
+
+type (
+	GetUserReq {
+		Id string `path:"id"`
+	}
+
+	GetUserReply {
+		Id   string `json:"id"`
+		Name string `json:"name"`
+	}
+)
+service app {
+	@handler getUser
+	get /api/app/user/:id (GetUserReq) returns (GetUserReply)
+}
