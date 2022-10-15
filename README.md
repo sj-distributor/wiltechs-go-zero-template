@@ -1,3 +1,3 @@
-# go-zero-template
+# wiltechs-go-zero-template
 
-go-zero脚手架
+go-zero 实例模版
