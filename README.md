@@ -1,7 +1,8 @@
 ## wiltechs-go-zero-template
 
 ### 环境准备
-* 参考 https://github.com/nivin-studio/gonivinck
+* 运行环境 https://github.com/nivin-studio/gonivinck
+* Goctl工具 https://go-zero.dev/cn/docs/goctl/goctl
 
 ### 开始
 克隆项目
@@ -28,5 +29,7 @@ make run_rpc & make run_api
 ```
 
 ### 目录结构
+* 目录结构树和说明
 
 ### 注意事项
+* migrate使用说明
