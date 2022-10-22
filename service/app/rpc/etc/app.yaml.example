@@ -1,5 +1,14 @@
 Name: app.rpc
 ListenOn: 127.0.0.1:9898
+
+Mysql:
+  DataSource: root:root@tcp(127.0.0.1:3306)/go-zero?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+
+CacheRedis:
+  - Host: 127.0.0.1:6379
+    Type: node
+    Pass:
+
 Etcd:
   Hosts:
   - 127.0.0.1:2379

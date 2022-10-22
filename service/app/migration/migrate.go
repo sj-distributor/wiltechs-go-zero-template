@@ -12,7 +12,7 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-var configFile = flag.String("f", "../mq/etc/foundation.yaml", "the config file")
+var configFile = flag.String("f", "../rpc/etc/app.yaml", "the config file")
 var sourceFile = flag.String("sf", "./sql", "the sql source file")
 
 type Config struct {
@@ -21,8 +21,6 @@ type Config struct {
 	}
 }
 
-// todo 脚本代码优化
-// todo 看看有无创建sql文件的api可以调用，使用脚本创建sql文件
 func main() {
 	var c Config
 	var cmd string
