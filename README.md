@@ -37,16 +37,30 @@ make run_rpc & make run_api
 ```
 
 ### 目录结构
-* 目录结构树和说明
+```
+wiltechs-go-zero-template  //工程名称
+├── Makefile
+├── README.md
+├── common  //通用库
+│   └── jwtx
+│       
+├── go.mod
+├── go.sum
+└── service  //服务存放目录
+    └── app  //app服务
+        ├── api
+        ├── migration
+        ├── model
+        └── rpc
+```
 
 ### 注意事项
-1. 数据库版本管理
-   * 参考 https://github.com/golang-migrate/migrate
+1. 数据库迁移参考 https://github.com/golang-migrate/migrate
    * 生成sql文件
     ```
     migrate create -ext sql -dir ./service/app/migration/sql -seq create_table_name_table
     ```
    * 编写好sql文件之后运行迁移
     ```
-    migrate -path ./service/foundation/migration/sql -database "mysql://username:password@tcp(localhost:3306)/database" up
+    migrate -path ./service/app/migration/sql -database "mysql://username:password@tcp(localhost:3306)/database" up
     ```
