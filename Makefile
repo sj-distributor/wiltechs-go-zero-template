@@ -1,10 +1,6 @@
 GOPATH:=$(shell go env GOPATH)
 
 ############################## app ##############################
-.PHONY: model_init
-model_init:
-	@goctl model mysql ddl -src="./service/app/migration/sql/*.sql" -dir="./service/app/model" -c -style go_zero
-
 .PHONY: api_init
 api_init:
 	@goctl api go -api ./service/app/api/app.api -dir ./service/app/api -style go_zero

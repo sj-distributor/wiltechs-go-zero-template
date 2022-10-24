@@ -2,6 +2,7 @@
 
 ### 环境准备
 * 运行环境 https://github.com/nivin-studio/gonivinck
+* 安装protoc & protoc-gen-go https://go-zero.dev/cn/docs/prepare/protoc-install
 * Goctl工具 https://go-zero.dev/cn/docs/goctl/goctl
 * 安装golang-migrate客户端
     ```
@@ -55,7 +56,7 @@ wiltechs-go-zero-template  //工程名称
 ```
 
 ### 注意事项
-1. 数据库迁移参考 https://github.com/golang-migrate/migrate
+1. 数据库迁移 https://github.com/golang-migrate/migrate
    * 生成sql文件
     ```
     migrate create -ext sql -dir ./service/app/migration/sql -seq create_table_name_table
@@ -63,4 +64,8 @@ wiltechs-go-zero-template  //工程名称
    * 编写好sql文件之后运行迁移
     ```
     migrate -path ./service/app/migration/sql -database "mysql://username:password@tcp(localhost:3306)/database" up
+    ```
+   * 连接数据库生成或更新model
+    ```
+    goctl model mysql datasource -url="username:password@tcp(localhost:3306)/database" -table="table_name"  -dir="./service/app/model" -c -style go_zero
     ```
