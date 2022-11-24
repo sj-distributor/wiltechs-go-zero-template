@@ -31,7 +31,7 @@ func (l *GetUserLogic) GetUser(in *app.IdRequest) (*app.UserResponse, error) {
 
 	// 返回错误
 	if in.Id != "1" {
-		return nil, errors.Wrapf(xerr.NewErrMsg("错误id"), "GetUser error")
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.REUQES_PARAM_ERROR), "GetUser error")
 	}
 
 	return &app.UserResponse{

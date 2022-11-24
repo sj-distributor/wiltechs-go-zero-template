@@ -69,3 +69,27 @@ wiltechs-go-zero-template  //工程名称
     ```
     goctl model mysql datasource -url="username:password@tcp(localhost:3306)/database" -table="table_name"  -dir="./service/app/model" -c -style go_zero
     ```
+2. 错误处理
+   ```go
+   // rpc返回错误
+   if in.Id != "1" {
+       return nil, errors.Wrapf(xerr.NewErrCode(xerr.REUQES_PARAM_ERROR), "GetUser req: %+v", in)
+   }
+   ```
+   这里使用 go 默认的 errors 的包 errors.Wrapf，第一个参数是给前端的友好提示，第二个参数是写入日志的内容。可在xerr包中配置常用错误码和提示信息
+
+   ```go
+    // api返回错误
+   user, err := l.svcCtx.AppRpc.GetUser(l.ctx, &appclient.IdRequest{ Id: req.Id })
+   if err != nil {
+       return nil, errors.Wrapf(err, "GetUser req: %+v", req)
+   }
+   ```
+   第一个参数直接拿rpc返回的err（如果是单体应用则传入给前端的友好提示），第二个参数是写入日志的内容
+
+   ```go
+   if err != nil {
+       logx.WithContext(l.ctx).Errorf("User is exist : %+v", err)
+   }
+   ```
+   如果不需要 return ，只需要日志记录一下错误可以使用logx.WithContext
