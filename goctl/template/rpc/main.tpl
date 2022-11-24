@@ -3,12 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"go-zero-template/common/interpector/rpcserver"
 
-	"go-zero-template/service/app/rpc/app"
-	"go-zero-template/service/app/rpc/internal/config"
-	"go-zero-template/service/app/rpc/internal/server"
-	"go-zero-template/service/app/rpc/internal/svc"
+	{{.imports}}
+	"go-zero-template/common/interpector/rpcserver"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
@@ -17,7 +14,7 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-var configFile = flag.String("f", "etc/app.yaml", "the config file")
+var configFile = flag.String("f", "etc/{{.serviceName}}.yaml", "the config file")
 
 func main() {
 	flag.Parse()
@@ -27,15 +24,15 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		app.RegisterAppServer(grpcServer, server.NewAppServer(ctx))
-
+{{range .serviceNames}}       {{.Pkg}}.Register{{.Service}}Server(grpcServer, {{.ServerPkg}}.New{{.Service}}Server(ctx))
+{{end}}
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)
 		}
 	})
 
 	//rpc log,grpc的全局拦截器
-	s.AddUnaryInterceptors(rpcserver.LoggerInterceptor)
+    s.AddUnaryInterceptors(rpcserver.LoggerInterceptor)
 
 	defer s.Stop()
 
