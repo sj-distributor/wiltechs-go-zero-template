@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"go-zero-template/common/interpector/rpcserver"
 
 	"go-zero-template/service/app/rpc/app"
 	"go-zero-template/service/app/rpc/internal/config"
@@ -32,6 +33,10 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
+
+	//rpc log,grpc的全局拦截器
+	s.AddUnaryInterceptors(rpcserver.LoggerInterceptor)
+
 	defer s.Stop()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)

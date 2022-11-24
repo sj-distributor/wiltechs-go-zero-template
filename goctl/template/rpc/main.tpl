@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	{{.imports}}
+	"go-zero-template/common/interpector/rpcserver"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
@@ -29,6 +30,10 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
+
+	//rpc log,grpc的全局拦截器
+    s.AddUnaryInterceptors(rpcserver.LoggerInterceptor)
+
 	defer s.Stop()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
