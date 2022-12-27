@@ -26,10 +26,10 @@ var (
 
 type (
 	userModel interface {
-		Insert(ctx context.Context, data *User) (sql.Result, error)
+		Insert(ctx context.Context, session sqlx.Session, data *User) (sql.Result, error)
 		FindOne(ctx context.Context, id string) (*User, error)
-		Update(ctx context.Context, data *User) error
-		Delete(ctx context.Context, id string) error
+		Update(ctx context.Context, session sqlx.Session, data *User) error
+		Delete(ctx context.Context, session sqlx.Session, id string) error
 	}
 
 	defaultUserModel struct {
@@ -50,10 +50,13 @@ func newUserModel(conn sqlx.SqlConn, c cache.CacheConf) *defaultUserModel {
 	}
 }
 
-func (m *defaultUserModel) Delete(ctx context.Context, id string) error {
+func (m *defaultUserModel) Delete(ctx context.Context, session sqlx.Session, id string) error {
 	goZeroUserIdKey := fmt.Sprintf("%s%v", cacheGoZeroUserIdPrefix, id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
+		if session != nil {
+			return session.ExecCtx(ctx, query, id)
+		}
 		return conn.ExecCtx(ctx, query, id)
 	}, goZeroUserIdKey)
 	return err
@@ -76,19 +79,24 @@ func (m *defaultUserModel) FindOne(ctx context.Context, id string) (*User, error
 	}
 }
 
-func (m *defaultUserModel) Insert(ctx context.Context, data *User) (sql.Result, error) {
+func (m *defaultUserModel) Insert(ctx context.Context, session sqlx.Session, data *User) (sql.Result, error) {
 	goZeroUserIdKey := fmt.Sprintf("%s%v", cacheGoZeroUserIdPrefix, data.Id)
-	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+	return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?)", m.table, userRowsExpectAutoSet)
+		if session != nil {
+			return session.ExecCtx(ctx, query, data.Id, data.Name)
+		}
 		return conn.ExecCtx(ctx, query, data.Id, data.Name)
 	}, goZeroUserIdKey)
-	return ret, err
 }
 
-func (m *defaultUserModel) Update(ctx context.Context, data *User) error {
+func (m *defaultUserModel) Update(ctx context.Context, session sqlx.Session, data *User) error {
 	goZeroUserIdKey := fmt.Sprintf("%s%v", cacheGoZeroUserIdPrefix, data.Id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, userRowsWithPlaceHolder)
+		if session != nil {
+			return session.ExecCtx(ctx, query, data.Name, data.Id)
+		}
 		return conn.ExecCtx(ctx, query, data.Name, data.Id)
 	}, goZeroUserIdKey)
 	return err

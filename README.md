@@ -44,7 +44,10 @@ wiltechs-go-zero-template  //工程名称
 ├── README.md
 ├── common  //通用库
 │   └── jwtx
-│       
+│     
+├── goctl  
+│   └── template  //goctl模版文件
+│    
 ├── go.mod
 ├── go.sum
 └── service  //服务存放目录
@@ -67,7 +70,7 @@ wiltechs-go-zero-template  //工程名称
     ```
    * 连接数据库生成或更新model
     ```
-    goctl model mysql datasource -url="username:password@tcp(localhost:3306)/database" -table="table_name"  -dir="./service/app/model" -c -style go_zero
+    goctl model mysql datasource -url="username:password@tcp(localhost:3306)/database" -table="table_name"  -dir="./service/app/model" --home="./goctl/template" -c -style go_zero
     ```
 2. 错误处理
    ```go
