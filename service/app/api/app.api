@@ -11,6 +11,15 @@ type (
 	}
 )
 service app {
+	@handler swag
+	get /swagger
+	
+	@handler swagJson
+	get /swagger-json
+	
+	@doc(
+		summary: "获取用户信息"
+	)
 	@handler getUser
 	get /api/app/user/:id (GetUserReq) returns (GetUserReply)
 }
